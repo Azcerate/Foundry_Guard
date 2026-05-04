@@ -1,0 +1,39 @@
+Product: FoundryGuard
+
+Mission: Secure Azure AI Foundry agents, prompts, tools, memory, identities, and AI workflows from attacks on agents and attacks from compromised agents.
+
+Product modules
+Prompt Defense
+Direct prompt injection
+Indirect prompt injection
+Hidden/invisible prompts
+Website/document prompt attacks
+
+Agent Defense
+Tool-use authorization
+Privilege verification
+Agent action approval
+Kill-chain interruption
+
+Identity Defense
+NHI/service principal checks
+Token/secret exposure detection
+Least privilege scoring
+Passkey/FIDO2 control mapping
+
+Data Defense
+PII/PHI/secrets detection
+Prompt/output redaction
+Embedding/log leakage detection
+
+Threat Simulation
+Phishing prompts
+Ransomware-style agent behavior
+Data exfiltration attempts
+Tool abuse scenarios
+
+Monitoring
+Audit logs
+Risk scoring
+Security events API
+Executive-ready dashboard later

@@ -1,0 +1,20 @@
+block_patterns:
+  - 'ignore previous instructions'
+  - 'reveal your system prompt'
+  - 'show me your hidden instructions'
+  - 'bypass safety'
+  - 'developer message'
+  - 'system message'
+  - 'jailbreak'
+  - 'DAN mode'
+
+pii_patterns:
+  ssn: '\\b\\d{3}-\\d{2}-\\d{4}\\b'
+  api_key: '(?i)(api[_-]?key|secret|token)\\s*[:=]\\s*["'']?[A-Za-z0-9_\\-]{16,}'
+  credit_card: '\\b(?:\\d[ -]*?){13,16}\\b'
+
+memory_block_keywords:
+  - 'remember my password'
+  - 'save my ssn'
+  - 'store this secret'
+  - 'remember this api key'
