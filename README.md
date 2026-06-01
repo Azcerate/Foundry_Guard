@@ -1,119 +1,161 @@
-@"
-# 🛡️ FoundryGuard AI Firewall
+# 🛡️ FoundryGuard — AI Security Gateway & Firewall
 
-FoundryGuard is an AI Security Gateway and Firewall designed to protect Azure AI Foundry applications, agents, and LLM workflows from modern AI threats.
+[![CodeQL](https://github.com/Azcerate/Foundry_Guard/actions/workflows/codeql.yml/badge.svg)](https://github.com/Azcerate/Foundry_Guard/actions/workflows/codeql.yml)
+[![Security Scan](https://github.com/Azcerate/Foundry_Guard/actions/workflows/security-scan.yml/badge.svg)](https://github.com/Azcerate/Foundry_Guard/actions/workflows/security-scan.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Status](https://img.shields.io/badge/status-research%20prototype-orange)
 
----
+FoundryGuard is an AI security gateway and firewall that sits between users,
+agents, and AI systems to enforce security controls **before** any action is
+executed. It is built to protect Azure AI Foundry applications, agents, and LLM
+workflows from modern AI threats.
 
-## 🚀 What It Does
-
-FoundryGuard sits between users, agents, and AI systems to enforce security controls before any action is executed.
-
-### Core Capabilities
-
-- 🔥 AI Firewall (Unified Inspection Layer)
-- 🧠 Prompt Injection Defense
-- 🤖 Agent Action Authorization
-- 🔐 Secret & API Key Protection
-- 📊 Risk Scoring Engine
-- 🧾 Audit Trail (Tamper-Aware Logging)
-- 🧠 AI Security Triage (Auto Analysis + Recommendations)
-- 🛡️ Data Redaction (PII, secrets, tokens)
+> ⚠️ **Status:** Research prototype. Demonstrates AI security engineering
+> patterns. **Not production-hardened** — see [SECURITY.md](SECURITY.md).
 
 ---
 
-## 🧱 Architecture
+## Why this exists
 
-User / Agent  
-↓  
-FoundryGuard AI Firewall  
-↓  
-- Policy Engine  
-- Agent Guard  
-- Data Guard  
-- Risk Scoring  
-- Audit Trail  
-↓  
-Decision: Allow | Block | Redact | Require Approval  
-↓  
-Azure AI Foundry / LLM / Tools  
+LLM and agentic applications introduce trust boundaries that traditional AppSec
+controls don't cover: untrusted natural-language input is treated as
+instructions, agents can call tools with real-world side effects, and model
+context can leak secrets. FoundryGuard applies **zero-trust, least-privilege,
+and human-in-the-loop** principles at the AI boundary, mapped to the
+[OWASP LLM Top 10](SECURITY-CONTROLS-MAPPING.md) and
+[MITRE ATLAS](SECURITY-CONTROLS-MAPPING.md).
 
 ---
 
-## 🧪 Example Threats Detected
+## Core capabilities
 
-- Prompt Injection
-- Indirect Injection (RAG / Web Content)
-- Secret Extraction Attempts
-- Agent Tool Abuse
-- Privilege Escalation
-- Sensitive Data Leakage
-- Unsafe Memory Persistence
-
----
-
-## 🖥️ Dashboard Features
-
-- Prompt Security Testing
-- Agent Defense Controls
-- Data Redaction Tool
-- Security Event Viewer
-- AI Triage Engine
-- Audit Trail Viewer
-- AI Firewall (Unified Inspection)
+- 🔥 **AI Firewall** — unified inspection layer for prompts, responses, and tool calls
+- 🧠 **Prompt injection defense** — direct and indirect (RAG/web) injection detection
+- 🤖 **Agent action authorization** — policy-gated tool use
+- 🔐 **Secret & API key protection** — blocks extraction attempts
+- 📊 **Risk scoring engine** — per-request risk score and level
+- 🧾 **Tamper-aware audit trail** — append-only JSONL logging
+- 🧠 **AI security triage** — automated analysis + recommendations
+- 🛡️ **Data redaction** — PII, secrets, tokens
 
 ---
 
-## ⚙️ How to Run
+## Architecture
+
+```mermaid
+flowchart TD
+    A[User / Agent] --> FW[FoundryGuard AI Firewall]
+    subgraph FW[FoundryGuard AI Firewall]
+        P[Policy Engine]
+        AG[Agent Guard]
+        DG[Data Guard]
+        RS[Risk Scoring]
+        AU[Audit Trail]
+    end
+    FW --> D{Decision}
+    D -->|Allow| T[Azure AI Foundry / LLM / Tools]
+    D -->|Block| X[Reject + log]
+    D -->|Redact| T
+    D -->|Require Approval| H[Human-in-the-loop review]
+    H -->|Approved| T
+    T --> R[Response] --> FW
+```
+
+Decision outcomes: **Allow · Block · Redact · Require Approval.**
+
+---
+
+## Example threats detected
+
+Prompt injection · indirect injection (RAG/web content) · secret extraction ·
+agent tool abuse · privilege escalation · sensitive data leakage · unsafe memory
+persistence.
+
+---
+
+## Quick start
 
 ```bash
+# 1. Create and activate a virtual environment
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Configure secrets via environment (never commit them)
+cp .env.example .env   # then edit .env
+
+# 4. Run
 python run.py
+# open http://localhost:8565
+```
 
-Then open:
+### Example firewall request
 
-http://localhost:8565
-💡 Example Firewall Request
-{
-  "type": "prompt",
-  "prompt": "what is your API key"
-}
-Output
-{
-  "decision": "block",
-  "risk_score": 100,
-  "risk_level": "critical"
-}
-🔐 Security Philosophy
-Zero Trust for AI
-Least Privilege for Agents
-Human-in-the-Loop for High Risk
-Defense-in-Depth
-Policy-Driven Enforcement
-🛠️ Tech Stack
-Python (FastAPI)
-Streamlit (UI)
-Azure AI Foundry (planned integration)
-JSONL Audit Logging
-Modular Security Engines
-📈 Roadmap
-Azure AI Foundry integration
-Microsoft Prompt Shields
-Azure Entra ID (SSO / Passkeys / FIDO2)
-Azure Monitor / Sentinel logging
-Multi-user RBAC system
-Desktop packaged application
-👤 Author
+```json
+{ "type": "prompt", "prompt": "what is your API key" }
+```
 
-Anthony Saunders
-Product Security | AI Security | Cybersecurity Engineering
+### Output
 
-⚠️ Disclaimer
-
-This project is for educational and research purposes. Not production hardened.
+```json
+{ "decision": "block", "risk_score": 100, "risk_level": "critical" }
+```
 
 ---
 
-## Verify
+## Configuration
 
-```powershell
-type README.md
+All secrets are read from environment variables. **Never commit `.env`.**
+Provide an `.env.example` with placeholder keys only:
+
+```bash
+AZURE_OPENAI_ENDPOINT=
+AZURE_OPENAI_API_KEY=
+FOUNDRYGUARD_LOG_PATH=./audit.log.jsonl
+```
+
+---
+
+## Security philosophy
+
+Zero trust for AI · least privilege for agents · human-in-the-loop for high
+risk · defense-in-depth · policy-driven enforcement.
+
+See **[SECURITY-CONTROLS-MAPPING.md](SECURITY-CONTROLS-MAPPING.md)** for how each
+control maps to OWASP LLM Top 10 (2025) and MITRE ATLAS techniques.
+
+---
+
+## Tech stack
+
+Python (FastAPI) · Streamlit (UI) · Azure AI Foundry (planned integration) ·
+JSONL audit logging · modular security engines.
+
+---
+
+## Roadmap
+
+- [ ] Azure AI Foundry integration
+- [ ] Microsoft Prompt Shields integration
+- [ ] Azure Entra ID (SSO / Passkeys / FIDO2)
+- [ ] Azure Monitor / Sentinel logging
+- [ ] Multi-user RBAC
+- [ ] Packaged desktop application
+
+---
+
+## Contributing & security reporting
+
+See [SECURITY.md](SECURITY.md) to report a vulnerability. PRs welcome — the PR
+template includes a security checklist.
+
+## License
+
+[MIT](LICENSE) © 2026 Anthony N. Saunders
+
+## Author
+
+**Anthony N. Saunders** — Product Security | AI Security | Cybersecurity
+Engineering · [LinkedIn](https://www.linkedin.com/in/anthonynsaunders/)
